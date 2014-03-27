@@ -1,9 +1,9 @@
 <?php
 
-class SubscriptionController extends Controller {
+class InsuranceController extends Controller {
 
 	public function getIndex() {
-		$obj = Subscription::where('account_id', Authenticate::getCurrentAccountId())->get();
+		$obj = Insurance::where('account_id', Authenticate::getCurrentAccountId())->get();
 		$res['type'] = 'success';
 		$res['items'] = $obj->toArray();
 		return ApiResponse::json($res);
@@ -11,13 +11,13 @@ class SubscriptionController extends Controller {
 
 	public function postCreate() {
 		$res = array();
-		$validator = Validator::make(Input::all(), Subscription::$validationRules);
+		$validator = Validator::make(Input::all(), Insurance::$validationRules);
 		if($validator->fails()) {
 			$res['type'] = 'error';
 			$res['validation_errors'] = $validator->messages()->toArray();
 			$res['message'] = 'Item not created.';
 		} else {
-			$obj = new Subscription();
+			$obj = new Insurance();
 			$obj->name = Input::get('name');
 			$obj->start = Input::get('start');
 			$obj->interval = Input::get('interval');
@@ -34,7 +34,7 @@ class SubscriptionController extends Controller {
 
 	public function getRead($id) {
 		$res = array();
-		if($obj = Subscription::where('id', $id)->where('account_id', Authenticate::getCurrentAccountId())->first()) {
+		if($obj = Insurance::where('id', $id)->where('account_id', Authenticate::getCurrentAccountId())->first()) {
 			$res['item'] = $obj->toArray();
 			$res['item']['attachments'] = $obj->attachments->toArray();
 			$res['type'] = 'success';
@@ -48,9 +48,9 @@ class SubscriptionController extends Controller {
 
 	public function postUpdate($id) {
 		$res = array();
-		if($obj = Subscription::where('id', $id)->where('account_id', Authenticate::getCurrentAccountId())->first()) {
+		if($obj = Insurance::where('id', $id)->where('account_id', Authenticate::getCurrentAccountId())->first()) {
 
-			$validator = Validator::make(Input::all(), Subscription::$validationRules);
+			$validator = Validator::make(Input::all(), Insurance::$validationRules);
 			if($validator->fails()) {
 				$res['type'] = 'error';
 				$res['validation_errors'] = $validator->messages()->toArray();
@@ -77,7 +77,7 @@ class SubscriptionController extends Controller {
 
 	public function postDelete() {
 		$id = Input::get('id');
-		if($obj = Subscription::where('id', $id)->where('account_id', Authenticate::getCurrentAccountId())->first()) {
+		if($obj = Insurance::where('id', $id)->where('account_id', Authenticate::getCurrentAccountId())->first()) {
 			$obj->delete();
 			$res['type'] = 'success';
 			$res['message'] = 'Item deleted.';

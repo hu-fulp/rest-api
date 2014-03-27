@@ -1,8 +1,8 @@
 <?php
 
-class Subscription extends Eloquent {
+class Insurance extends Eloquent {
 
-	protected $table = 'subscription';
+	protected $table = 'insurance';
 
 	public static $validationRules = array(
 		'name' => 'required',
@@ -10,7 +10,6 @@ class Subscription extends Eloquent {
 		'end' => 'sometimes|required|date',
 		'interval' => 'required',
 		'amount'=>'required|numeric'
-
 	);
 
 	public function attachments() {

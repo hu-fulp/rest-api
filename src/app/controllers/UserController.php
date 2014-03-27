@@ -53,7 +53,7 @@ class UserController extends Controller {
 		if($validator->fails()) {
 			$res['type'] = 'error';
 			$res['validation_errors'] = $validator->messages()->toArray();
-			$res['message'] = 'User could not be created.';
+			$res['message'] = 'Item not created';
 		} else {
 			$user = new User();
 			$user->email = Input::get('email');
@@ -64,7 +64,8 @@ class UserController extends Controller {
 			$account->name = $user->name;
 			$user->accounts()->save($account);
 			$res['type'] = 'success';
-			$res['message'] = 'User has been created successfully.';
+			$res['message'] = 'Item created.';
+			$res['item_id'] = $user->id;
 		}
 		return ApiResponse::json($res);
 	}
@@ -83,14 +84,14 @@ class UserController extends Controller {
 		if($validator->fails()) {
 			$res['type'] = 'error';
 			$res['validation_errors'] = $validator->messages()->toArray();
-			$res['message'] = 'User could not be updated.';
+			$res['message'] = 'User not updated.';
 		} else {
 			$user = User::where('id', $userId)->first();
 			$user->name = Input::get('name');
 			$user->password = hash('sha512', Input::get('password'));
 			$user->save();
 			$res['type'] = 'success';
-			$res['message'] = 'User has been updated successfully.';
+			$res['message'] = 'Item updated.';
 		}
 		return ApiResponse::json($res);
 	}
@@ -107,13 +108,13 @@ class UserController extends Controller {
 		if($validator->fails()) {
 			$res['type'] = 'error';
 			$res['validation_errors'] = $validator->messages()->toArray();
-			$res['message'] = 'Account ID could not be updated.';
+			$res['message'] = 'Account ID not updated.';
 		} else {
 			$login = Login::where('token', $token)->where('user_id', $userId)->first();
 			$login->account_id = Input::get('account_id');
 			$login->save();
 			$res['type'] = 'success';
-			$res['message'] = 'Account ID has been updated successfully.';
+			$res['message'] = 'Account ID updated.';
 		}
 		return ApiResponse::json($res);
 	}

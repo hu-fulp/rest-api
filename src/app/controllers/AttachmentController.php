@@ -17,7 +17,7 @@ class AttachmentController extends Controller {
 			$pepper = strtoupper(hash('sha512', uniqid().rand(0,55)));
 			$hash = substr(hash('sha512', uniqid().rand(0,999999)), 0, 100);
 			$file = ($salt . Input::get('file') . $pepper );
-			file_put_contents(storage_path().'/attachments/'.$hash, $file);
+			file_put_contents(storage_path().'/attachments/'.$hash, Attachment::mcEncrypt($file));
 
 			// Insert file
 			$obj = new Attachment();
@@ -26,23 +26,27 @@ class AttachmentController extends Controller {
 			$obj->salt = $salt;
 			$obj->pepper = $pepper;
 			$obj->hash = $hash;
+			$obj->attachable_type = Input::get('link_type');
+			$obj->attachable_id = Input::get('link_id');
 			$obj->save();
 			$res['type'] = 'success';
 			$res['message'] = 'Attachment has been created successfully.';
+			$res['attachment_hash'] = $hash;
 		}
 		return ApiResponse::json($res);
 	}
 
 	public function getShow($hash) {
+
 		$obj = Attachment::where('hash', $hash)->first();
 		if(!$obj) {
 			App::abort(404);
 		}
-		$file = str_replace(array($obj->pepper, $obj->salt), '', file_get_contents(storage_path().'/attachments/'.$obj->hash));
-		echo $file;die();
-		echo base64_decode($file);
+		$file = file_get_contents(storage_path().'/attachments/'.$obj->hash);
+		$file = Attachment::mcDecrypt($file);
+		$file = str_replace(array($obj->pepper, $obj->salt), '', $file);
 		header('Content-Type: '.$obj->mime);
-		exit();
+		exit(base64_decode($file));
 	}
 
 	public function postDelete() {

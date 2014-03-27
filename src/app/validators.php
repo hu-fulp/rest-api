@@ -31,7 +31,6 @@ Validator::extend('attachmentValidObjectId', function($attribute, $value, $param
     		}
     		break;
     }
-
     return $result;
 });
 

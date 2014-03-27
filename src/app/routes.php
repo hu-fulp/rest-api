@@ -12,11 +12,13 @@
 */
 
 
+
 /**
  * Authorized Resources
  */
 Route::group(array('prefix'=>'1', 'before'=>'auth'), function() {
 	Route::controller('Attachment', 'AttachmentController');
+	Route::controller('Income', 'IncomeController');
 	Route::controller('Subscription', 'SubscriptionController');
 });
 
@@ -25,7 +27,7 @@ Route::group(array('prefix'=>'1', 'before'=>'auth'), function() {
  */
 Route::group(array('prefix'=>'/1'), function() {
 	Route::controller('User', 'UserController');
+	Route::get('/attachment/{slug}', 'AttachmentController@getShow');
 });
 
 
-Route::get('attachment/{slug}', 'AttachmentController@getShow');
